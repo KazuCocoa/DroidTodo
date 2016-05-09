@@ -1,9 +1,12 @@
 package com.kazucocoa.droidtodo;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -68,6 +71,11 @@ public class ToDoActivity extends AppCompatActivity {
         RealmRecyclerView realmRecyclerView =
                 (RealmRecyclerView) findViewById(R.id.realm_recycler_view);
         realmRecyclerView.setAdapter(toDoRealmAdapter);
+
+
+        FragmentManager manager = getSupportFragmentManager();
+        MainFragmentDialog dialog = new MainFragmentDialog();
+        dialog.show(manager, "dialog");
     }
 
     @Override
@@ -172,5 +180,20 @@ public class ToDoActivity extends AppCompatActivity {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.deleteRealm(realmConfig);
+    }
+
+    public static class MainFragmentDialog extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View view = inflater.inflate(R.layout.to_do_item_view, null, false);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("タイトル");
+            builder.setPositiveButton("OK", null);
+            builder.setNegativeButton("Cancel", null);
+            builder.setView(view);
+            return builder.create();
+        }
     }
 }
